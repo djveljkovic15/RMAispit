@@ -7,13 +7,13 @@
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
     android:layout_marginBottom="5dp"
-
+    android:id="@+id/recyclerWeather"
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:background="@color/design_default_color_error"
         >
         <ImageView
             android:id="@+id/recyclerWeatherIcon"
@@ -36,8 +36,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:textSize="50sp"
             android:text="TEST"
-
-
             />
         <TextView
             android:id="@+id/recyclerWeatherCity"

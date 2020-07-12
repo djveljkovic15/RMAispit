@@ -6,7 +6,6 @@ import rs.raf.ispit.djordje_veljkovic_rn4615.data.datasources.remote.WeatherServ
 import rs.raf.ispit.djordje_veljkovic_rn4615.data.models.Resource
 import rs.raf.ispit.djordje_veljkovic_rn4615.data.models.weather.Weather
 import rs.raf.ispit.djordje_veljkovic_rn4615.data.models.weather.WeatherEntity
-import timber.log.Timber
 
 
 class WeatherRepositoryImpl(
@@ -18,22 +17,27 @@ class WeatherRepositoryImpl(
         return weatherService.findAll(key,city, days)
             .doOnNext {
                 val weatherEntities = mutableListOf<WeatherEntity>()
-                for (i in 0 until days.toInt()){
+//                if(days.toInt() in 1..3) {
+                for (i in 0 until days.toInt()) {
 
-                    weatherEntities.add(WeatherEntity(
-                        it.location.name,
-                        it.current.temp_c,
-                        it.forecast.forecastday[i].day.maxtemp_c,
-                        it.forecast.forecastday[i].day.mintemp_c,
-                        it.current.wind_mph,
-                        it.current.uv,
-                        it.location.lat,
-                        it.location.lon,
-                        it.current.condition.icon,
-                        it.forecast.forecastday[i].date
-                    ))
+                    weatherEntities.add(
+                        WeatherEntity(
+                            it.location.name,
+                            it.current.temp_c,
+                            it.forecast.forecastday[i].day.maxtemp_c,
+                            it.forecast.forecastday[i].day.mintemp_c,
+                            it.current.wind_mph,
+                            it.current.uv,
+                            it.location.lat,
+                            it.location.lon,
+                            it.current.condition.icon,
+                            it.forecast.forecastday[i].date
+                        )
+                    )
                 }
                 weatherDao.deleteAndInsertAll(weatherEntities)
+//                }
+
 //                weatherDao.insertAll(weatherEntities)
             }.map {
                 Resource.Success(Unit)

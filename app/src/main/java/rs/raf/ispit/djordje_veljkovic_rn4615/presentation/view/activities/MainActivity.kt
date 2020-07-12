@@ -1,6 +1,7 @@
 package rs.raf.ispit.djordje_veljkovic_rn4615.presentation.view.activities
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -22,6 +23,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     lateinit var weatherAdapter: WeatherAdapter
 
+    companion object{
+        val MESSAGE_KEY = "666"
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +43,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     private fun initSearchButton() {
         upperViewPagerButton.setOnClickListener {
-            Timber.e("UROSEEE: %s",upperViewPagerCityName.toString() )
+//            val intent = Intent(this, MapsActivity::class.java)
+//            startActivity(intent)
+            Timber.e("InitSearchButton: %s",upperViewPagerCityName.toString() )
             weatherViewModel.fetchWeather(upperViewPagerCityName.text.toString(), upperViewPagerDays.text.toString())
             weatherViewModel.getWeather(upperViewPagerCityName.text.toString())
         }
@@ -59,7 +66,13 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     private fun initRecyclerView() {
         mainRecyclerView.layoutManager = LinearLayoutManager(this)
-        weatherAdapter = WeatherAdapter(WeatherDiffCallback())
+        weatherAdapter = WeatherAdapter(WeatherDiffCallback()) {
+
+            // Mogu i da stavim da prosledjujem samo ID, pa da u MapsActivity radim getWeatherByID jer mi je u bazi vec
+            val intent = Intent(this, MapsActivity::class.java)
+            intent.putExtra(MESSAGE_KEY, it)
+            startActivity(intent)
+        }
         mainRecyclerView.adapter = weatherAdapter
     }
 

@@ -17,7 +17,7 @@
         app:layout_constraintBottom_toTopOf="@id/mainRecyclerView"
         android:layout_marginRight="25dp"
         android:layout_marginLeft="25dp"
-
+        android:background="@color/colorPrimary"
         >
         <EditText
             android:id="@+id/upperViewPagerCityName"

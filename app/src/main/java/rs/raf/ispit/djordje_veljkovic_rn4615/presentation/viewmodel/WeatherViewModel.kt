@@ -71,8 +71,17 @@ class WeatherViewModel(
                     }
                 },
                 {
-                    weatherState.value = WeatherState.Error(errorMessage)
-                    Timber.e(it)
+                    if(city==""){
+                        weatherState.value = WeatherState.Error("You must enter city name for this application to work.")
+                    }else {
+                        if (days == "1" || days == "2" || days == "3") {
+                            weatherState.value = WeatherState.Error(errorMessage)
+                        } else {
+                            weatherState.value =
+                                WeatherState.Error("You can only search for up to 3 days!")
+                        }
+                        Timber.e(it)
+                    }
                 }
             )
         subscriptions.add(subscription)

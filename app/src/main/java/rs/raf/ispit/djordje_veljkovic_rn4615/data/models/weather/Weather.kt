@@ -1,5 +1,9 @@
 package rs.raf.ispit.djordje_veljkovic_rn4615.data.models.weather
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class Weather(
     val id: Long,
     val city : String,
@@ -13,4 +17,4 @@ data class Weather(
     val icon: String,
     val date: String
 
-)
+) : Parcelable
