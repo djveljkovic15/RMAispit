@@ -6,9 +6,12 @@ import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_maps.*
+import kotlinx.android.synthetic.main.recycler_weather.*
 import rs.raf.ispit.djordje_veljkovic_rn4615.R
 import rs.raf.ispit.djordje_veljkovic_rn4615.data.models.weather.Weather
 import timber.log.Timber
+import java.math.RoundingMode
+import java.text.DecimalFormat
 
 class MapsActivity : AppCompatActivity(R.layout.activity_maps), OnMapReadyCallback {
 
@@ -62,14 +65,17 @@ class MapsActivity : AppCompatActivity(R.layout.activity_maps), OnMapReadyCallba
 
         val weather: Weather?
 
+        val df = DecimalFormat("#.##")
+        df.roundingMode = RoundingMode.CEILING
+
         intent.let {
             weather = it.getParcelableExtra(MainActivity.MESSAGE_KEY)
 
             activityMapsInfoCity.text = weather.city + ", " + weather.date
-            activityMapsInfoMaxTemp.text = "MAXIMUM DAILY TEMPERATURE: " +weather.max_temp
-            activityMapsInfoMinTemp.text = "MINIMUM DAILY TEMPERATURE: "+weather.min_temp
-            activityMapsInfoWind.text = "WIND SPEED: "+ weather.wind
-            activityMapsInfoUV.text = "UV RADIATION: "+weather.uv
+            activityMapsInfoMaxTemp.text = "MAXIMUM DAILY TEMPERATURE: " + df.format(weather.max_temp.toDouble()).toString()
+            activityMapsInfoMinTemp.text = "MINIMUM DAILY TEMPERATURE: "+ df.format(weather.min_temp.toDouble()).toString()
+            activityMapsInfoWind.text = "WIND SPEED: "+ df.format(weather.wind.toDouble()).toString()
+            activityMapsInfoUV.text = "UV RADIATION: "+ df.format(weather.uv.toDouble()).toString()
 
             mMap.mapType = GoogleMap.MAP_TYPE_NORMAL
 

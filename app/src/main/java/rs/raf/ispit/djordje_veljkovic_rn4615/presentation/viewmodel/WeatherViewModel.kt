@@ -23,37 +23,7 @@ class WeatherViewModel(
 
     override val weatherState: MutableLiveData<WeatherState> = MutableLiveData()
 
-//    private val publishSubject: PublishSubject<WeatherFilter> = PublishSubject.create()  //WeatherFilter
-//
-//    init{
-//        val errorMessage = "Error happened while fetching data from db"
-//        val subscription = publishSubject
-//            .debounce(200, TimeUnit.MILLISECONDS)
-//            .distinctUntilChanged()
-//            .switchMap {
-//                Timber.e("RVM switch mapa weather $it")
-//                weatherRepository
-//                    .filterWeather(it.city)
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .doOnError {
-//                        Timber.e("Error in publish subject")
-//                        Timber.e(it)
-//                    }
-//            }
-//            .subscribe(
-//                {
-//                    Timber.e("RVM success weather $it")
-//                    weatherState.value = WeatherState.Success(it)
-//                },
-//                {
-//                    weatherState.value = WeatherState.Error(errorMessage)
-//                    Timber.e(it)
-//                }
-//            )
-//
-//        subscriptions.add(subscription)
-//    }
+
     override fun fetchWeather(city: String, days: String) {
         val errorMessage = "Error while fetching weather from server!"
 
@@ -74,11 +44,11 @@ class WeatherViewModel(
                     if(city==""){
                         weatherState.value = WeatherState.Error("You must enter city name for this application to work.")
                     }else {
-                        if (days == "1" || days == "2" || days == "3") {
+                        if (days!= "" && days.toInt() in 1..11) {
                             weatherState.value = WeatherState.Error(errorMessage)
                         } else {
                             weatherState.value =
-                                WeatherState.Error("You can only search for up to 3 days!")
+                                WeatherState.Error("You can only search for up to 10 days!")
                         }
                         Timber.e(it)
                     }
@@ -103,15 +73,6 @@ class WeatherViewModel(
             )
         subscriptions.add(subscription)
     }
-//
-//    override fun filterWeather(city: String){
-//        Timber.e("FILTER TIME BAAAABE!")
-//        publishSubject.onNext(
-//            WeatherFilter(
-//                city
-//            )
-//        )
-//    }
 
     override fun onCleared() {
         super.onCleared()

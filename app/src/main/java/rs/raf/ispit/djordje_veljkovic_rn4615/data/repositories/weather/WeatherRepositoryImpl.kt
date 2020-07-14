@@ -13,8 +13,9 @@ class WeatherRepositoryImpl(
     private val weatherDao: WeatherDao
 ) : WeatherRepository {
     override fun fetchWeather(city: String, days: String): Observable<Resource<Unit>> {
-        val key = "6b5beea74c0b40e4aa7112728200907"
-        return weatherService.findAll(key,city, days)
+//        val key = "6b5beea74c0b40e4aa7112728200907"
+//        return weatherService.findAll(key,city, days)
+        return weatherService.findAll(city, days)
             .doOnNext {
                 val weatherEntities = mutableListOf<WeatherEntity>()
 //                if(days.toInt() in 1..3) {
@@ -44,10 +45,6 @@ class WeatherRepositoryImpl(
             }
     }
 
-//    override fun getWeather(): Observable<List<Weather>> {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//    }
-
     override fun getWeather(city: String): Observable<List<Weather>> {
         return weatherDao.filterWeather(city)
             .map {
@@ -68,27 +65,5 @@ class WeatherRepositoryImpl(
                 }
             }
     }
-
-//    override fun filterWeather(city: String): Observable<List<Weather>> { //, days: String
-//        return weatherDao
-//            .filterWeather(city)
-//            .map {
-//                it.map{ ti ->
-//                    Weather(
-//                        ti.id,
-//                        ti.city,
-//                        ti.temp,
-//                        ti.max_temp,
-//                        ti.min_temp,
-//                        ti.wind,
-//                        ti.uv,
-//                        ti.latitude,
-//                        ti.longitude,
-//                        ti.icon,
-//                        ti.date
-//                    )
-//                }
-//            }
-//    }
 
 }

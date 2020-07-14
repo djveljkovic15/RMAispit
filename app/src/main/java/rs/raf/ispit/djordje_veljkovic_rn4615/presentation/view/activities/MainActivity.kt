@@ -45,8 +45,28 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         upperViewPagerButton.setOnClickListener {
 //            val intent = Intent(this, MapsActivity::class.java)
 //            startActivity(intent)
-            Timber.e("InitSearchButton: %s",upperViewPagerCityName.toString() )
-            weatherViewModel.fetchWeather(upperViewPagerCityName.text.toString(), upperViewPagerDays.text.toString())
+
+            if(upperViewPagerCityName.text.toString()=="") {
+                Toast.makeText(this, "You must enter city name!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if(upperViewPagerDays.text.toString()== "") {
+                /**
+                 Ja bih dozvolio da dan bude prazan zbog offline slucaja gde izbacujem sve kesirane podatke ali dokumentacija trazi drugacije.
+                */
+                Toast.makeText(this, "You can only ask for 1 to 10 days!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if(upperViewPagerDays.text.toString().toInt() !in 1..10){
+                Toast.makeText(this, "You can only ask for 1 to 10 days!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            Timber.e("InitSearchButton: %s", upperViewPagerCityName.text.toString())
+            weatherViewModel.fetchWeather(
+                upperViewPagerCityName.text.toString(),
+                upperViewPagerDays.text.toString()
+            )
             weatherViewModel.getWeather(upperViewPagerCityName.text.toString())
         }
     }
