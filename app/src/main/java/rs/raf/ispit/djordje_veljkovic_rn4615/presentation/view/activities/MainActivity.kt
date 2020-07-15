@@ -1,7 +1,11 @@
 package rs.raf.ispit.djordje_veljkovic_rn4615.presentation.view.activities
 
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -41,33 +45,63 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 //        initFetchTest()
     }
 
+    private fun isNetworkAvailable(context: Context?): Boolean {
+        if (context == null) return false
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            if (capabilities != null) {
+                when {
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
+                        return true
+                    }
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
+                        return true
+                    }
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> {
+                        return true
+                    }
+                }
+            }
+        } else {
+            val activeNetworkInfo = connectivityManager.activeNetworkInfo
+            if (activeNetworkInfo != null && activeNetworkInfo.isConnected) {
+                return true
+            }
+        }
+        return false
+    }
     private fun initSearchButton() {
         upperViewPagerButton.setOnClickListener {
-//            val intent = Intent(this, MapsActivity::class.java)
+            //            val intent = Intent(this, MapsActivity::class.java)
 //            startActivity(intent)
 
-            if(upperViewPagerCityName.text.toString()=="") {
+            if (upperViewPagerCityName.text.toString() == "") {
                 Toast.makeText(this, "You must enter city name!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            if(upperViewPagerDays.text.toString()== "") {
-                /**
-                 Ja bih dozvolio da dan bude prazan zbog offline slucaja gde izbacujem sve kesirane podatke ali dokumentacija trazi drugacije.
-                */
-                Toast.makeText(this, "You can only ask for 1 to 10 days!", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+            if (!isNetworkAvailable(this)) {
+                weatherViewModel.getWeather(upperViewPagerCityName.text.toString())
+
+            } else {
+                if (upperViewPagerDays.text.toString() == "") {
+                    Toast.makeText(this, "You can only ask for 1 to 10 days!", Toast.LENGTH_SHORT)
+                        .show()
+                    return@setOnClickListener
+                }
+                if (upperViewPagerDays.text.toString().toInt() !in 1..10) {
+                    Toast.makeText(this, "You can only ask for 1 to 10 days!", Toast.LENGTH_SHORT)
+                        .show()
+                    return@setOnClickListener
+                }
+                Timber.e("InitSearchButton: %s", upperViewPagerCityName.text.toString())
+                weatherViewModel.fetchWeather(
+                    upperViewPagerCityName.text.toString(),
+                    upperViewPagerDays.text.toString()
+                )
+//            weatherViewModel.getWeather(upperViewPagerCityName.text.toString())
             }
-            if(upperViewPagerDays.text.toString().toInt() !in 1..10){
-                Toast.makeText(this, "You can only ask for 1 to 10 days!", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            Timber.e("InitSearchButton: %s", upperViewPagerCityName.text.toString())
-            weatherViewModel.fetchWeather(
-                upperViewPagerCityName.text.toString(),
-                upperViewPagerDays.text.toString()
-            )
-            weatherViewModel.getWeather(upperViewPagerCityName.text.toString())
         }
     }
 
