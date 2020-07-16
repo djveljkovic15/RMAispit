@@ -61,6 +61,7 @@ class WeatherViewModel(
         val errorMessage = "Error while getting data from database!"
         val subscription = weatherRepository
             .getWeather(city)
+            .debounce(1000,TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(

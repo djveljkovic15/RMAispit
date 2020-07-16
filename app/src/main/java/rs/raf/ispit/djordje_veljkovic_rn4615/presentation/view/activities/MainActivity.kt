@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     lateinit var weatherAdapter: WeatherAdapter
 
     companion object{
-        val MESSAGE_KEY = "666"
+        const val MESSAGE_KEY = "666"
     }
 
 
@@ -85,22 +85,18 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 weatherViewModel.getWeather(upperViewPagerCityName.text.toString())
 
             } else {
-                if (upperViewPagerDays.text.toString() == "") {
+                if (upperViewPagerDays.text.toString() == "" || upperViewPagerDays.text.toString().toInt() !in 1..10) {
                     Toast.makeText(this, "You can only ask for 1 to 10 days!", Toast.LENGTH_SHORT)
                         .show()
                     return@setOnClickListener
                 }
-                if (upperViewPagerDays.text.toString().toInt() !in 1..10) {
-                    Toast.makeText(this, "You can only ask for 1 to 10 days!", Toast.LENGTH_SHORT)
-                        .show()
-                    return@setOnClickListener
-                }
+
                 Timber.e("InitSearchButton: %s", upperViewPagerCityName.text.toString())
                 weatherViewModel.fetchWeather(
                     upperViewPagerCityName.text.toString(),
                     upperViewPagerDays.text.toString()
                 )
-//            weatherViewModel.getWeather(upperViewPagerCityName.text.toString())
+                weatherViewModel.getWeather(upperViewPagerCityName.text.toString())
             }
         }
     }
